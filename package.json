@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "methods": "~0.1.0",
-    "assert": "~1.1.1"
+    "assert": "~1.1.1",
+    "path-to-regexp": "~0.1.2"
   }
 }
