@@ -192,6 +192,43 @@ app.route('/api/users/profile')
 })
 ```
 
+#### before
+
+You can define function which will be executed before each route method, and before all nested routes.
+```
+
+app.route('/someRoute')
+	.before(function * (next) {
+		this.status = 300;
+	})
+	.get(function * (next) {
+		this.body = 'should not be here';
+		this.status = 200;
+		yield next;
+	});
+```
+
+## Other features
+
+#### Multiple middlewares
+
+With ``koa-routing`` you can provide multiple middlewares for each route:
+```
+
+app.route('/multipleMiddleware')
+	.get(function * (next) {
+		this.body = '1';
+		this.status = 200;
+		yield next;
+	}, function * (next) {
+		this.body = '2';
+		yield next;
+	});
+```
+
+If you go to this route you will receive ``2`` as a result, because request will be passed 
+to each defined handler.
+
 ## Contributing
 
 Feel free to send pull request with some new awesome feature or some bug fix.

@@ -40,7 +40,6 @@ describe('router is', function () {
         });
     }).should.be.ok;
 
-
     app.route(/^\/date\/\d{4}-\d{2}-\d{2}\/?/)
       .get(function * (next) {
         this.body = 'date sent';
@@ -67,6 +66,27 @@ describe('router is', function () {
                 yield next;
               });
           });
+      });
+
+    app.route('/multipleMiddleware')
+      .get(function * (next) {
+        this.body = '1';
+        this.status = 200;
+        yield next;
+			}, function * (next) {
+				this.body = '2';
+				yield next;
+			});
+
+    app.route('/before')
+      .before(function * (next) {
+        console.log('executed');
+        this.status = 300;
+      })
+      .get(function * (next) {
+        this.body = 'should not be here';
+        this.status = 200;
+        yield next;
       });
   });
 
@@ -148,6 +168,23 @@ describe('router is', function () {
       request(app.listen())
         .post('/date/2013-09-04/add/days')
         .expect('added days to date from POST')
+        .expect(200, done);
+    });
+  });
+
+  describe('going into /before route for .before testing', function () {
+    it('will be error expected for GET /before', function (done) {
+      request(app.listen())
+        .get('/before')
+        .expect(300, done);
+    });
+  });
+
+  describe('going into /multipleMiddleware route for multiple middleware testing', function () {
+    it('will be error expected for GET /before', function (done) {
+      request(app.listen())
+        .get('/multipleMiddleware')
+        .expect('2')
         .expect(200, done);
     });
   });
