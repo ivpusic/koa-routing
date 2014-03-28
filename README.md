@@ -1,5 +1,7 @@
 koa-routing
 ================
+[![Build Status](https://travis-ci.org/ivpusic/koa-routing.svg?branch=master)](https://travis-ci.org/ivpusic/koa-routing)
+[![Dependency Status](https://gemnasium.com/ivpusic/koa-routing.svg)](https://gemnasium.com/ivpusic/koa-routing)
 
 Manage koa routes on right way.
 
