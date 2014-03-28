@@ -80,7 +80,6 @@ describe('router is', function () {
 
     app.route('/before')
       .before(function * (next) {
-        console.log('executed');
         this.status = 300;
       })
       .get(function * (next) {
