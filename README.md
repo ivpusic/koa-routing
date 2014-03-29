@@ -45,14 +45,14 @@ app.route('/users')
     yield next;
   })
   .nested('/list')
-  .get(function * (next) {
-    this.body = 'from users list GET';
-    yield next;
-  });
-  .put(function * (next) {
-    this.body = 'from users list PUT';
-    yield next;
-  });
+    .get(function * (next) {
+      this.body = 'from users list GET';
+      yield next;
+    });
+    .put(function * (next) {
+      this.body = 'from users list PUT';
+      yield next;
+    });
   
 app.listen(4000);
 ```
