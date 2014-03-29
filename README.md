@@ -18,7 +18,6 @@ npm install koa-routing
 
 Let's define following routes:
 - ``/users`` [GET, POST, PUT],
-- ``/users/:id/profile`` [GET],
 - ``/users/list`` [GET, PUT]
 
 With ``koa-routing`` you can nest routes, and on that way you can follow DRY principle.
