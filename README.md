@@ -212,7 +212,7 @@ app.route('/someRoute')
 
 #### Multiple middlewares
 
-With ``koa-routing`` you can provide multiple middlewares for each route:
+With ``koa-routing`` you can provide multiple middlewares for each route method:
 ```
 
 app.route('/multipleMiddleware')
