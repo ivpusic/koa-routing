@@ -37,103 +37,30 @@ app.route('/users')
     yield next;
   })
   .post(function * (next) {
-  	this.body = 'from post';
+    this.body = 'from post';
     yield next;
   })
   .put(function * (next) {
-	this.body = 'from put';
+    this.body = 'from put';
     yield next;
   })
-  .nested('/:id/profile', function () {
-    this
-      .get(function * (next) {
-        this.body = 'profile for user ' + this.request.params.id;
-        yield next;
-      });
-  })
-  .nested('/list', function () {
-    this
-      .get(function * (next) {
-        this.body = 'from users list GET';
-        yield next;
-      });
-      .put(function * (next) {
-        this.body = 'from users list PUT';
-        yield next;
-      });
+  .nested('/list')
+  .get(function * (next) {
+    this.body = 'from users list GET';
+    yield next;
   });
-
+  .put(function * (next) {
+    this.body = 'from users list PUT';
+    yield next;
+  });
+  
 app.listen(4000);
 ```
 **Make sure that you put ``koa-routing`` middleware after body parsers and simmilar middlewares which are preparing request for you**.
 
 As you can see, you can pass classic ``express`` route style, such as ``/user/:id``, and after that you can read received values from ``this.request.params`` object.
 
-### Example 2
-
-You can pass also regex as route path. In following example we will see how you can do that, and also separate route handlers among multiple files.
-
-**app.js**
-```
-var koa = require('koa'),
-  routing = require('koa-routing');
-
-var app = module.exports = koa();
-app.use(routing(app));
-require('./users-api');
-
-app.listen(4000);
-```
-
-**users-api.js**
-```
-'use strict';
-
-var app = require('./app'),
-  profileApi = require('./profile-api'),
-  // declare /user route
-  usersApi = app.route(/\/user\/?/);
-
-usersApi.get(function * (next) {
-  this.body = 'from get';
-  yield next;
-});
-
-usersApi.post(function * (next) {
-  this.body = 'from post';
-  yield next;
-});
-
-usersApi.put(function * (next) {
-  this.body = 'from put';
-  yield next;
-});
-
-// declare /user/profile route
-usersApi.nested(/\/profile/, profileApi);
-module.exports = usersApi;
-```
-
-**profile-api.js**
-```
-'use strict';
-
-var getHandler = function * (next) {
-  this.body = 'GET profile';
-  yield next;
-};
-
-module.exports = function () {
-  this
-    .get(getHandler)
-    .post(function * (next) {
-      this.body = 'POST profile';
-      yield next;
-    });
-};
-```
-
-Above examples are showing on which different ways you can structure your ``koa`` application with ``koa-routing``. It is up to you to take one approach and start coding your awesome app.
+You can pass also regex as route path.
 
 ## API
 
@@ -178,20 +105,19 @@ You see that you are repeating ``/api/users/profile`` for every route, and we do
 
 ```
 // first you type fixed part
-app.route('/api/users/profile')
-.nested('/data', function () {
-  // and then you define methods for that route
-  this
+var route = app.route('/api/users/profile');
+
+route.nested('/data')
   .get(function * (next) { yield next; });
   // here you can also define other HTTP operations, like POST, PUT, etc
   // example of put...
   .put(function * (next) { yield next; });
-})
-.nested('/image', function () {
-  this
+
+route.nested('/image')
   .get(function * (next) { yield next; });
-})
 ```
+
+Keep in mind that nested creates new route for you and returns created route. You can continue nesting routes. It is up to you.
 
 #### before
 
