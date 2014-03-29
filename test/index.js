@@ -26,19 +26,17 @@ describe('router is', function () {
       yield next;
     }).should.be.ok;
 
-    users.nested('/:id', function () {
-      this
-        .get(function * (next) {
-          this.body = this.request.params.id;
-          yield next;
-        })
-        .post(function * (next) {
-          this.body = {
-            message: 'ok'
-          };
-          yield next;
-        });
-    }).should.be.ok;
+    users.nested('/:id')
+      .get(function * (next) {
+        this.body = this.request.params.id;
+        yield next;
+      })
+      .post(function * (next) {
+        this.body = {
+          message: 'ok'
+        };
+        yield next;
+      }).should.be.ok;
 
     app.route(/^\/date\/\d{4}-\d{2}-\d{2}\/?/)
       .get(function * (next) {
@@ -49,23 +47,19 @@ describe('router is', function () {
         this.body = 'date sent from post';
         yield next;
       })
-      .nested(/\/add\/?/, function () {
-        this
-          .get(function * (next) {
-            this.body = 'added to date';
-            yield next;
-          })
-          .nested(/\/days/, function () {
-            this
-              .get(function * (next) {
-                this.body = 'added days to date';
-                yield next;
-              })
-              .post(function * (next) {
-                this.body = 'added days to date from POST';
-                yield next;
-              });
-          });
+      .nested(/\/add\/?/)
+      .get(function * (next) {
+        this.body = 'added to date';
+        yield next;
+      })
+      .nested(/\/days/)
+      .get(function * (next) {
+        this.body = 'added days to date';
+        yield next;
+      })
+      .post(function * (next) {
+        this.body = 'added days to date from POST';
+        yield next;
       });
 
     app.route('/multipleMiddleware')
@@ -73,10 +67,10 @@ describe('router is', function () {
         this.body = '1';
         this.status = 200;
         yield next;
-			}, function * (next) {
-				this.body = '2';
-				yield next;
-			});
+      }, function * (next) {
+        this.body = '2';
+        yield next;
+      });
 
     app.route('/before')
       .before(function * (next) {
@@ -87,6 +81,7 @@ describe('router is', function () {
         this.status = 200;
         yield next;
       });
+
   });
 
   describe('goint into regular routes', function () {
