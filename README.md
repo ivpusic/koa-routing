@@ -2,17 +2,38 @@ koa-routing
 ================
 [![Build Status](https://travis-ci.org/ivpusic/koa-routing.svg?branch=master)](https://travis-ci.org/ivpusic/koa-routing)
 [![Dependency Status](https://gemnasium.com/ivpusic/koa-routing.svg)](https://gemnasium.com/ivpusic/koa-routing)
-
-Manage koa routes on right way.
-
-## About
-
-This is ``koa`` routing middleware which will help you to manage and define your application routes.
-
-### Installation
+## Installation
 ```
 npm install koa-routing
 ```
+
+## Motivation
+
+I wanted to separate my route definitions into multiple files. Also I wanted to make easier to specify route handlers, and execute some methods before some set of routes, for example ensuring that user in authenticated before doing some action. So I developed [koa-r](https://github.com/ivpusic/koa-r) and [koa-routing](https://github.com/ivpusic/koa-routing) to achieve that. Final result is something like this:
+
+**/routing/index.js** file
+```
+module.exports = function (app) {
+  require('./user')(app.route('/api/users').before(authenticate));
+};
+```
+
+**/routing/users.js** file
+```
+/**
+ * /api/users
+ */
+
+module.exports = function (route) {
+  route.get(r('user', 'getUsers'));
+  route.post(r('user', 'register'));
+  route.nested('/logout').get(r('user', 'logout'));
+};
+```
+
+So here you can see that we are specifying handlers for route with ``r('module', 'method')`` pattern, and we are also following DRY principle when we define our routes.
+
+If you like this idea, you are on right place.
 
 ### Example 1
 
