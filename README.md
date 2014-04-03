@@ -9,12 +9,12 @@ npm install koa-routing
 
 ## Motivation
 
-I wanted to separate my route definitions into multiple files. Also I wanted to make easier to specify route handlers, and execute some methods before some set of routes, for example ensuring that user in authenticated before doing some action. So I developed [koa-r](https://github.com/ivpusic/koa-r) and [koa-routing](https://github.com/ivpusic/koa-routing) to achieve that. Final result is something like this:
+I wanted to separate my route definitions into multiple files. Also I wanted to make easier to specify route handlers, and execute some methods before some set of routes, for example ensuring that user is authenticated before doing some action. So I developed [koa-r](https://github.com/ivpusic/koa-r) and [koa-routing](https://github.com/ivpusic/koa-routing) to achieve that. Final result is something like this:
 
 **/routing/index.js** file
 ```
 module.exports = function (app) {
-  require('./user')(app.route('/api/users').before(authenticate));
+  require('./users')(app.route('/api/users').before(authenticate));
 };
 ```
 
