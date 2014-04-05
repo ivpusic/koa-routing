@@ -25,8 +25,10 @@ module.exports = function (app) {
  */
 
 module.exports = function (route) {
+  /* GET /api/users */
   route.get(r('user', 'getUsers'));
-  route.post(r('user', 'register'));
+  
+  /* GET /api/users/logout */
   route.nested('/logout').get(r('user', 'logout'));
 };
 ```
