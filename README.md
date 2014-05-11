@@ -37,7 +37,7 @@ So here you can see that we are specifying handlers for route with ``r('module',
 
 If you like this idea, you are on right place.
 
-### Example 1
+### Example
 
 Let's define following routes:
 - ``/users`` [GET, POST, PUT],

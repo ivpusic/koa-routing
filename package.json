@@ -1,6 +1,6 @@
 {
   "name": "koa-routing",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Routing middleware for Koa",
   "main": "index.js",
   "scripts": {
