@@ -6,12 +6,14 @@ var koa = require('koa'),
   routing = require('..');
 
 var app = koa(),
+  app2 = koa(),
   users;
 
 describe('router is', function () {
 
   before(function () {
     app.use(routing(app)).should.be.ok;
+    app2.use(routing(app2)).should.be.ok;
     users = app.route('/users');
 
     users.get(function * (next) {
@@ -77,6 +79,13 @@ describe('router is', function () {
         this.status = 300;
       })
       .get(function * (next) {
+        this.body = 'should not be here';
+        this.status = 200;
+        yield next;
+      });
+
+    app2.route('/app2')
+      .get(function * (next){
         this.body = 'should not be here';
         this.status = 200;
         yield next;
@@ -179,6 +188,21 @@ describe('router is', function () {
       request(app.listen())
         .get('/multipleMiddleware')
         .expect('2')
+        .expect(200, done);
+    });
+  });
+
+  describe('going into /app2 with app', function () {
+    it('will be error expected for GET /app2', function (done) {
+      request(app.listen())
+        .get('/app2')
+        .expect(404, done);
+    });
+  });
+  describe('going into /app2 with app2', function () {
+    it('should GET /app2', function (done) {
+      request(app2.listen())
+        .get('/app2')
         .expect(200, done);
     });
   });
