@@ -78,7 +78,7 @@ app.route('/users')
   
 app.listen(4000);
 ```
-**You should put ``koa-routing`` middleware after body parsers and simmilar middlewares which are preparing request for you, or passing an options object with a ``defer`` field setted to ``true`` **.
+**You should put ``koa-routing`` middleware after body parsers and simmilar middlewares which are preparing request for you, or passing an options object with a ``defer`` field setted to ``true``**.
 
 As you can see, you can pass classic ``express`` route style, such as ``/user/:id``, and after that you can read received values from ``this.request.params`` object.
 
