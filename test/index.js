@@ -7,6 +7,7 @@ var koa = require('koa'),
 
 var app = koa(),
   app2 = koa(),
+  deferApp = koa(),
   users;
 
 describe('router is', function () {
@@ -14,6 +15,7 @@ describe('router is', function () {
   before(function () {
     app.use(routing(app)).should.be.ok;
     app2.use(routing(app2)).should.be.ok;
+    deferApp.use(routing(deferApp,{defer:true}));
     users = app.route('/users');
 
     users.get(function * (next) {
@@ -90,6 +92,32 @@ describe('router is', function () {
         this.status = 200;
         yield next;
       });
+
+    app.route('/notdefer')
+      .get(function * (next){
+        this.defer = this.defer || 'false';
+        this.body = 'defer is ' + this.defer;
+        this.status = 200;
+        yield next;
+      });
+
+    app.use(function * (next){
+      this.defer = 'true';
+      yield next;
+    });
+
+    deferApp.route('/defer')
+      .get(function * (next){
+        this.defer = this.defer || 'false';
+        this.body = 'defer is ' + this.defer;
+        this.status = 200;
+        yield next;
+      });
+
+    deferApp.use(function * (next){
+      this.defer = 'true';
+      yield next;
+    });
 
   });
 
@@ -199,11 +227,28 @@ describe('router is', function () {
         .expect(404, done);
     });
   });
+
   describe('going into /app2 with app2', function () {
     it('should GET /app2', function (done) {
       request(app2.listen())
         .get('/app2')
         .expect(200, done);
+    });
+  });
+
+  describe('not in defer mode', function () {
+    it('defer should be false ', function (done) {
+      request(app.listen())
+        .get('/notdefer')
+        .expect('defer is false', done);
+    });
+  });
+
+  describe('in defer mode', function () {
+    it('defer should be true ', function (done) {
+      request(deferApp.listen())
+        .get('/defer')
+        .expect('defer is true', done);
     });
   });
 });
