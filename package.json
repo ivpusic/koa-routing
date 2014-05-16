@@ -1,6 +1,6 @@
 {
   "name": "koa-routing",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Routing middleware for Koa",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
   "author": "Ivan Pusic",
   "license": "MIT",
   "dependencies": {
-    "methods": "~0.1.0",
+    "methods": "~1.0.0",
     "assert": "~1.1.1",
     "path-to-regexp": "~0.1.2",
     "concat-regexp": "0.0.1",
