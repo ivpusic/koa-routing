@@ -78,7 +78,7 @@ app.route('/users')
   
 app.listen(4000);
 ```
-**Make sure that you put ``koa-routing`` middleware after body parsers and simmilar middlewares which are preparing request for you**.
+**You should put ``koa-routing`` middleware after body parsers and simmilar middlewares which are preparing request for you, or passing an options object with a ``defer`` field setted to ``true`` **.
 
 As you can see, you can pass classic ``express`` route style, such as ``/user/:id``, and after that you can read received values from ``this.request.params`` object.
 
@@ -177,6 +177,14 @@ app.route('/multipleMiddleware')
 
 If you go to this route you will receive ``2`` as a result, because request will be passed 
 to each defined handler.
+
+#### Options
+
+```
+app.use(routing(app,options));
+```
+
+* ``defer`` Default is false. If true, serves after yield next, allowing any downstream middleware to respond first.
 
 ## Contributing
 
