@@ -27,7 +27,7 @@ module.exports = function (app) {
 module.exports = function (route) {
   /* GET /api/users */
   route.get(r('user', 'getUsers'));
-  
+
   /* GET /api/users/logout */
   route.nested('/logout').get(r('user', 'logout'));
 };
@@ -75,7 +75,7 @@ app.route('/users')
       this.body = 'from users list PUT';
       yield next;
     });
-  
+
 app.listen(4000);
 ```
 **You should put ``koa-routing`` middleware after body parsers and simmilar middlewares which are preparing request for you, or passing an options object with a ``defer`` field setted to ``true``**.
@@ -96,7 +96,7 @@ app.route('/users/:id');
 
 #### HTTP methods
 
-After you define your route, you need set ``HTTP`` methods for that route. 
+After you define your route, you need set ``HTTP`` methods for that route.
 In following example you need to replace ``someHTTPmethod`` with one of supported
 ``node`` ``HTTP`` methods. That can be ``GET``, ``POST``, ``PUT``, etc...
 
@@ -145,7 +145,6 @@ Keep in mind that nested creates new route for you and returns created route. Yo
 
 You can define function which will be executed before each route method, and before all nested routes.
 ```
-
 app.route('/someRoute')
 	.before(function * (next) {
 		this.status = 300;
@@ -161,7 +160,6 @@ app.route('/someRoute')
 
 This function will be executed if there is no matching HTTP method.
 ```
-
 app.route('/someRoute')
 	.all(function * (next) {
 		this.body = 'will catch GET/POST/PUT... etc';
@@ -176,7 +174,6 @@ app.route('/someRoute')
 
 With ``koa-routing`` you can provide multiple middlewares for each route method:
 ```
-
 app.route('/multipleMiddleware')
 	.get(function * (next) {
 		this.body = '1';
@@ -188,7 +185,7 @@ app.route('/multipleMiddleware')
 	});
 ```
 
-If you go to this route you will receive ``2`` as a result, because request will be passed 
+If you go to this route you will receive ``2`` as a result, because request will be passed
 to each defined handler.
 
 #### Options
