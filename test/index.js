@@ -29,6 +29,11 @@ describe('router is', function () {
       this.body = 'from users POST';
       yield next;
     }).should.be.ok;
+    
+    users.all(function * (next) {
+      this.body = 'from users ALL';
+      yield next;
+    }).should.be.ok;
 
     users.nested('/:id')
       .get(function * (next) {
@@ -40,7 +45,12 @@ describe('router is', function () {
           message: 'ok'
         };
         yield next;
+      })
+      .all(function * (next) {
+        this.body = 'ALL ok';
+        yield next;
       }).should.be.ok;
+      
 
     app.route(/^\/date\/\d{4}-\d{2}-\d{2}\/?/)
       .get(function * (next) {
@@ -49,6 +59,10 @@ describe('router is', function () {
       })
       .post(function * (next) {
         this.body = 'date sent from post';
+        yield next;
+      })
+      .all(function * (next) {
+        this.body = 'date sent from all';
         yield next;
       })
       .nested(/\/add\/?/)
@@ -63,6 +77,10 @@ describe('router is', function () {
       })
       .post(function * (next) {
         this.body = 'added days to date from POST';
+        yield next;
+      })
+      .all(function * (next) {
+        this.body = 'added days to date from all';
         yield next;
       });
 
@@ -138,6 +156,13 @@ describe('router is', function () {
         .expect('from users POST')
         .expect(200, done);
     });
+    
+    it('now should ALL /users instead of PUT /users', function (done) {
+      request(app.listen())
+        .put('/users')
+        .expect('from users ALL')
+        .expect(200, done);
+    });
 
     it('now should GET /users/:id where id is 1234', function (done) {
       request(app.listen())
@@ -160,6 +185,13 @@ describe('router is', function () {
         })
         .expect(200, done);
     });
+    
+    it('now should ALL /users/:id/ instead ot PUT /users/:id/', function (done) {
+      request(app.listen())
+        .put('/users/2/')
+        .expect('ALL ok')
+        .expect(200, done);
+    });
   });
 
   describe('going into regex routes', function () {
@@ -169,16 +201,35 @@ describe('router is', function () {
         .expect(200, done);
     });
 
+    it('now should ALL /date/2013-09-04', function (done) {
+      request(app.listen())
+        .put('/date/2013-09-04')
+        .expect('date sent from all')
+        .expect(200, done);
+    });
+
     it('now should GET /date/2013-09-04/add', function (done) {
       request(app.listen())
         .get('/date/2013-09-04/add')
         .expect('added to date')
         .expect(200, done);
     });
+    
+    it('now should not ALL /date/2013-09-04/add', function (done) {
+      request(app.listen())
+        .put('/date/2013-09-04/add')
+        .expect(404, done);
+    });
 
     it('now should not GET /date/2013-09-04/addd', function (done) {
       request(app.listen())
         .get('/date/2013-09-04/addd')
+        .expect(404, done);
+    });
+    
+    it('now should not ALL /date/2013-09-04/addd', function (done) {
+      request(app.listen())
+        .put('/date/2013-09-04/addd')
         .expect(404, done);
     });
 
@@ -199,6 +250,13 @@ describe('router is', function () {
       request(app.listen())
         .post('/date/2013-09-04/add/days')
         .expect('added days to date from POST')
+        .expect(200, done);
+    });
+    
+    it('now should ALL /date/2013-09-04/add', function (done) {
+      request(app.listen())
+        .put('/date/2013-09-04/add/days')
+        .expect('added days to date from all')
         .expect(200, done);
     });
   });

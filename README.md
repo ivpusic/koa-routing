@@ -157,6 +157,19 @@ app.route('/someRoute')
 	});
 ```
 
+#### all
+
+This function will be executed if there is no matching HTTP method.
+```
+
+app.route('/someRoute')
+	.all(function * (next) {
+		this.body = 'will catch GET/POST/PUT... etc';
+		this.status = 200;
+		yield next;
+	})
+```
+
 ## Other features
 
 #### Multiple middlewares
